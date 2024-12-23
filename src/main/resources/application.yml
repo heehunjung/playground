@@ -2,14 +2,14 @@ spring:
   application:
     name: playground
   datasource:
-    url: jdbc:mysql://localhost:3306/your_database_name
-    username: root
-    password:
+    url: ${AWS_ENDPOINT}      #jdbc:mysql://localhost:3306/your_database_name
+    username: ${AWS_USERNAME} #heehunjung
+    password: ${AWS_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update  # ??? ??? ?? ?? (create, update, validate, none)
-    show-sql: true      # ???? SQL ?? ??
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
-        format_sql: true # ??? SQL? ?? ?? ??
+        format_sql: true
