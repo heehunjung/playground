@@ -2,9 +2,12 @@ spring:
   application:
     name: playground
   datasource:
-    url: ${AWS_ENDPOINT}      #jdbc:mysql://localhost:3306/your_database_name
-    username: ${AWS_USERNAME} #heehunjung
-    password: ${AWS_PASSWORD}
+#    url: ${AWS_ENDPOINT}
+    url: jdbc:mysql://localhost:3306/umc-7th
+#    username: ${AWS_USERNAME} #heehunjung
+    username: root
+#    password: ${AWS_PASSWORD}
+    password: Skyskzz12!
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
