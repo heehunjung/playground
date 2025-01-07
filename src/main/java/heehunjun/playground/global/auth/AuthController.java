@@ -1,10 +1,9 @@
-package heehunjun.playground.domain.check.auth;
+package heehunjun.playground.global.auth;
 
 import static java.lang.System.getenv;
 
 import heehunjun.playground.domain.member.domain.Member;
 import heehunjun.playground.domain.member.domain.MemberRepository;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

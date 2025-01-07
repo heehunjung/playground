@@ -1,4 +1,4 @@
-package heehunjun.playground.global.interceptor;
+package heehunjun.playground.global.auth.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,8 +13,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class MyInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+    public boolean preHandle (HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+    // cors
+//        if (request.getMethod().equals("OPTIONS")) {
+//            return true;
+//        }
+        final String token = request.getHeader("token");
     }
 }

@@ -1,4 +1,4 @@
-package heehunjun.playground.domain.check.auth;
+package heehunjun.playground.global.auth;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
