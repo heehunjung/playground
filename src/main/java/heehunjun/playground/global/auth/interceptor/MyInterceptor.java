@@ -20,5 +20,6 @@ public class MyInterceptor implements HandlerInterceptor {
 //            return true;
 //        }
         final String token = request.getHeader("token");
+        return true;
     }
 }
