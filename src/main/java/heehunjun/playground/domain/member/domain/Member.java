@@ -12,7 +12,6 @@ import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class Member {
@@ -26,4 +25,10 @@ public class Member {
     private String email;
 
     private String oauth;
+
+    public Member(String nickName, String email, String oauth) {
+        this.nickName = nickName;
+        this.email = email;
+        this.oauth = oauth;
+    }
 }

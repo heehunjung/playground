@@ -4,6 +4,7 @@ import heehunjun.playground.domain.auth.oauth.controller.AuthVariable;
 import heehunjun.playground.domain.member.domain.Member;
 import heehunjun.playground.domain.member.domain.MemberRepository;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -23,22 +24,19 @@ public class KakaoOauthService {
     private static final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private static final String USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
     private static final String REDIRECT_URL = "http://localhost:8080/oauth2/kakao";
+    private static final String KAKAO = "kakao";
+    private static final String GOOGLE = "google";
 
     private final AuthVariable authVariable;
     private final MemberRepository memberRepository;
 
     public void saveNewMember(Map<String, Object> userInfo) {
-        // 3. 사용자 정보 반환
-        log.info("User Info: {}", userInfo);
         Map<String, Object> properties = (Map<String, Object>) userInfo.get("properties");
 
-        // todo : 이것도 빼야될 듯 !
-        Member newMember = new Member();
-        newMember.setOauth("kakao");
-        newMember.setNickName((String) properties.get("nickname"));
-        newMember.setEmail((String) properties.get("nickname"));
-        // todo : email 로 아이디 있는 지 검증해야 됨  ! !
-        memberRepository.save(newMember);
+        String nickname = (String) properties.get("nickname");
+        String email = (String) properties.get("email");
+
+        createMemberIfNotExist(KAKAO, nickname, email);
     }
 
     public String getKakaoAccessToken(String code) {
@@ -93,5 +91,15 @@ public class KakaoOauthService {
             log.error("Error while retrieving user info", e);
         }
         return null;
+    }
+
+    private Member createMemberIfNotExist(String platform, String email, String nickName) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        if (optionalMember.isPresent()) {
+            return optionalMember.get();
+        }
+
+        final Member member = new Member(nickName,email,platform);
+        return memberRepository.save(member);
     }
 }
