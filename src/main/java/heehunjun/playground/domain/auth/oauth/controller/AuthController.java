@@ -1,25 +1,16 @@
-package heehunjun.playground.global.auth.controller;
+package heehunjun.playground.domain.auth.oauth.controller;
 
 import static java.lang.System.getenv;
 
-import heehunjun.playground.domain.member.domain.Member;
-import heehunjun.playground.domain.member.domain.MemberRepository;
-import heehunjun.playground.global.auth.service.KakaoOauthService;
+import heehunjun.playground.domain.auth.oauth.service.KakaoOauthService;
 import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @RestController
@@ -35,7 +26,7 @@ public class AuthController {
     @GetMapping("/kakao")
     public ResponseEntity<String> oauth2Kakao(@RequestParam String code) {
         // 1. Access Token 요청
-        String accessToken = kakaoOauthService.getAccessToken(code);
+        String accessToken = kakaoOauthService.getKakaoAccessToken(code);
         if (accessToken == null) {
             return ResponseEntity.badRequest().body("Failed to retrieve access token");
         }

@@ -1,10 +1,9 @@
-package heehunjun.playground.global.auth.service;
+package heehunjun.playground.domain.auth.oauth.service;
 
+import heehunjun.playground.domain.auth.oauth.controller.AuthVariable;
 import heehunjun.playground.domain.member.domain.Member;
 import heehunjun.playground.domain.member.domain.MemberRepository;
-import heehunjun.playground.global.auth.controller.AuthVariable;
 import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -33,14 +32,16 @@ public class KakaoOauthService {
         log.info("User Info: {}", userInfo);
         Map<String, Object> properties = (Map<String, Object>) userInfo.get("properties");
 
+        // todo : 이것도 빼야될 듯 !
         Member newMember = new Member();
         newMember.setOauth("kakao");
         newMember.setNickName((String) properties.get("nickname"));
-        newMember.setPassword((String) properties.get("nickname") + UUID.randomUUID());
+        newMember.setEmail((String) properties.get("nickname"));
+        // todo : email 로 아이디 있는 지 검증해야 됨  ! !
         memberRepository.save(newMember);
     }
 
-    public String getAccessToken(String code) {
+    public String getKakaoAccessToken(String code) {
         log.info("[+| Kakao Login Authorization Code: {}", code);
         log.info("authVariable: {}", authVariable);
 

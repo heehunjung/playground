@@ -1,6 +1,4 @@
-package heehunjun.playground.global.auth.jwt;
-
-//import io.
+package heehunjun.playground.domain.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -77,7 +75,8 @@ public class JwtTokenProvider {
 
     private JwtParser getAccessTokenParser() {
         return Jwts.parserBuilder()
-                .setSigningKey(jwtAccessTokenSecret.getBytes((StandardCharsets.UTF_8));
+                .setSigningKey(jwtAccessTokenSecret.getBytes((StandardCharsets.UTF_8)))
+                .build();
     }
 
     // refresh

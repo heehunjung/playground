@@ -1,4 +1,4 @@
-package heehunjun.playground.global.auth.jwt;
+package heehunjun.playground.domain.auth.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
