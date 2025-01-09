@@ -1,7 +1,7 @@
-package heehunjun.playground.domain.auth.oauth.service;
+package heehunjun.playground.domain.auth.oauth.service.kakao;
 
 import heehunjun.playground.domain.auth.jwt.JwtTokenProvider;
-import heehunjun.playground.domain.auth.oauth.controller.AuthVariable;
+import heehunjun.playground.domain.auth.oauth.config.KakaoProperties;
 import heehunjun.playground.domain.member.domain.Member;
 import heehunjun.playground.domain.member.domain.MemberRepository;
 import heehunjun.playground.domain.token.domain.Token;
@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -23,19 +24,20 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class KakaoOauthService {
 
     private static final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private static final String USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
     private static final String REDIRECT_URL = "http://localhost:8080/oauth2/kakao";
     private static final String KAKAO = "kakao";
-    private static final String GOOGLE = "google";
 
-    private final AuthVariable authVariable;
+    private final KakaoProperties kakaoProperties;
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
 
+    // todo : 중복 로그인 ? ? ?
     public TokenResponse createToken(Map<String, Object> userInfo) {
         Map<String, Object> properties = (Map<String, Object>) userInfo.get("properties");
 
@@ -53,16 +55,16 @@ public class KakaoOauthService {
 
     public String getKakaoAccessToken(String code) {
         log.info("[+| Kakao Login Authorization Code: {}", code);
-        log.info("authVariable: {}", authVariable);
+        log.info("authVariable: {}", kakaoProperties);
 
         RestTemplate restTemplate = new RestTemplate();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("code", code);
-        params.add("client_id", authVariable.getKakaoClientId());
+        params.add("client_id", kakaoProperties.getKakaoClientId());
         params.add("redirect_uri", REDIRECT_URL);
-        params.add("client_secret", authVariable.getKakaoSecret());
+        params.add("client_secret", kakaoProperties.getKakaoSecret());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -106,7 +108,7 @@ public class KakaoOauthService {
     }
 
     private Member createMemberIfNotExist(String platform, String email, String nickName) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        final Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if (optionalMember.isPresent()) {
             return optionalMember.get();
         }

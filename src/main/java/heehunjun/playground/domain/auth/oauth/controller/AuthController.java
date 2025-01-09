@@ -2,18 +2,15 @@ package heehunjun.playground.domain.auth.oauth.controller;
 
 import static java.lang.System.getenv;
 
-import heehunjun.playground.domain.auth.oauth.service.KakaoOauthService;
+import heehunjun.playground.domain.auth.oauth.service.google.GoogleOauthService;
+import heehunjun.playground.domain.auth.oauth.service.kakao.KakaoOauthService;
 import heehunjun.playground.domain.token.dto.TokenResponse;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +30,7 @@ public class AuthController {
     private String baseDomain;
 
     private final KakaoOauthService kakaoOauthService;
+    private final GoogleOauthService googleOauthService;
 
     @GetMapping("/kakao")
     public void oauth2Kakao(@RequestParam String code, HttpServletResponse response) throws IOException {
@@ -52,6 +50,19 @@ public class AuthController {
         TokenResponse token = kakaoOauthService.createToken(userInfo);
         String url = generateUrl(baseLine, token.getAccessToken(), token.getRefreshToken());
 
+        response.sendRedirect(url);
+    }
+
+    @GetMapping("/google")
+    public void oauth2Google(final HttpServletResponse response, @RequestParam final String code) throws IOException {
+        log.info("여기");
+        final String baseUrl = "/login";
+        final TokenResponse tokens = googleOauthService.createToken(code);
+        final String accessToken = tokens.getAccessToken();
+        final String refreshToken = tokens.getRefreshToken();
+
+        String url = generateUrl(baseUrl, accessToken, refreshToken);
+        log.info("url = {}", url);
         response.sendRedirect(url);
     }
 

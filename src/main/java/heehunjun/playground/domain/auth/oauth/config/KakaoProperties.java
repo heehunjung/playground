@@ -1,11 +1,11 @@
-package heehunjun.playground.domain.auth.oauth.controller;
+package heehunjun.playground.domain.auth.oauth.config;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-public class AuthVariable {
+public class KakaoProperties {
 
     private final String kakaoClientId = System.getenv("CLIENT_ID");
     private final String kakaoRestAPIKey = System.getenv("KAKAO_APIKEY");

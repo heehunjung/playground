@@ -4,6 +4,7 @@ import heehunjun.playground.domain.auth.jwt.JwtTokenProvider;
 import heehunjun.playground.domain.token.domain.Token;
 import heehunjun.playground.domain.token.domain.TokenRepository;
 import heehunjun.playground.domain.token.dto.TokenResponse;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,15 @@ public class TokenService {
         token.changeToken(newRefreshToken);
 
         return TokenResponse.of(newAccessToken, newRefreshToken);
+    }
+
+    public void deleteToken(final String refreshToken) {
+        final Optional<Token> optionalToken = tokenRepository.findByRefreshToken(refreshToken);
+        if (optionalToken.isPresent()) {
+            jwtTokenProvider.extractRefreshTokenFromAccessToken(refreshToken);
+            tokenRepository.delete(optionalToken.get());
+            return;
+        }
+        throw new RuntimeException("Token not found");
     }
 }

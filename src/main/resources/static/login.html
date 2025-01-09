@@ -59,7 +59,14 @@
         카카오 로그인
     </button>
     <!-- 구글 로그인 버튼 -->
-    <button class="login-btn google-btn" onclick="location.href='/auth/google'">구글 로그인</button>
+    <button class="login-btn google-btn" onclick="location.href='https://accounts.google.com/o/oauth2/v2/auth?'+
+        'response_type=code&'+
+        'client_id=1090097674862-khfohqmcddb785oh69tateobinndh4tt.apps.googleusercontent.com&'+
+        'redirect_uri=http://localhost:8080/oauth2/google&'+
+        'scope=profile%20email&'+
+        'access_type=online'">
+        구글 로그인
+    </button>
 </div>
 </body>
 </html>
