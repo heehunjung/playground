@@ -2,7 +2,6 @@ package heehunjun.playground.domain.auth.oauth.client;
 
 import heehunjun.playground.domain.auth.oauth.config.GoogleProperties;
 import heehunjun.playground.domain.auth.oauth.service.google.GoogleTokenResponse;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class GoogleOauthClient {
+public class GoogleOAuthClient {
 
     private static final String OAUTH_GRANT_TYPE = "authorization_code";
 

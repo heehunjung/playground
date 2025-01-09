@@ -2,8 +2,8 @@ package heehunjun.playground.domain.auth.oauth.controller;
 
 import static java.lang.System.getenv;
 
-import heehunjun.playground.domain.auth.oauth.service.google.GoogleOauthService;
-import heehunjun.playground.domain.auth.oauth.service.kakao.KakaoOauthService;
+import heehunjun.playground.domain.auth.oauth.service.google.GoogleOAuthService;
+import heehunjun.playground.domain.auth.oauth.service.kakao.KakaoOAuthService;
 import heehunjun.playground.domain.token.dto.TokenResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,8 +29,8 @@ public class AuthController {
     @Value("${base-domain.front}")
     private String baseDomain;
 
-    private final KakaoOauthService kakaoOauthService;
-    private final GoogleOauthService googleOauthService;
+    private final KakaoOAuthService kakaoOauthService;
+    private final GoogleOAuthService googleOauthService;
 
     @GetMapping("/kakao")
     public void oauth2Kakao(@RequestParam String code, HttpServletResponse response) throws IOException {

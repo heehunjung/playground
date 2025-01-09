@@ -1,8 +1,7 @@
 package heehunjun.playground.domain.auth.oauth.service.google;
 
 import heehunjun.playground.domain.auth.jwt.JwtTokenProvider;
-import heehunjun.playground.domain.auth.oauth.client.GoogleOauthClient;
-import heehunjun.playground.domain.auth.oauth.config.GoogleProperties;
+import heehunjun.playground.domain.auth.oauth.client.GoogleOAuthClient;
 import heehunjun.playground.domain.member.domain.Member;
 import heehunjun.playground.domain.member.domain.MemberRepository;
 import heehunjun.playground.domain.token.domain.Token;
@@ -21,13 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class GoogleOauthService {
+public class GoogleOAuthService {
 
     private static final int PAYLOAD_INDEX = 1;
     private static final String PLATFORM = "google";
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final GoogleOauthClient googleOauthClient;
+    private final GoogleOAuthClient googleOauthClient;
     private final TokenRepository tokenRepository;
     private final MemberRepository memberRepository;
 
