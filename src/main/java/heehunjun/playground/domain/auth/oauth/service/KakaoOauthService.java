@@ -1,8 +1,12 @@
 package heehunjun.playground.domain.auth.oauth.service;
 
+import heehunjun.playground.domain.auth.jwt.JwtTokenProvider;
 import heehunjun.playground.domain.auth.oauth.controller.AuthVariable;
 import heehunjun.playground.domain.member.domain.Member;
 import heehunjun.playground.domain.member.domain.MemberRepository;
+import heehunjun.playground.domain.token.domain.Token;
+import heehunjun.playground.domain.token.domain.TokenRepository;
+import heehunjun.playground.domain.token.dto.TokenResponse;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +33,22 @@ public class KakaoOauthService {
 
     private final AuthVariable authVariable;
     private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenRepository tokenRepository;
 
-    public void saveNewMember(Map<String, Object> userInfo) {
+    public TokenResponse createToken(Map<String, Object> userInfo) {
         Map<String, Object> properties = (Map<String, Object>) userInfo.get("properties");
 
-        String nickname = (String) properties.get("nickname");
-        String email = (String) properties.get("email");
+        final String nickname = (String) properties.get("nickname");
+        final String email = (String) properties.get("email");
+        final Member member = createMemberIfNotExist(KAKAO, nickname, email);
 
-        createMemberIfNotExist(KAKAO, nickname, email);
+        final String accessToken = jwtTokenProvider.generateAccessToken(member.getEmail());
+        final String refreshToken = jwtTokenProvider.generateRefreshToken(member.getEmail());
+
+        saveOrUpdateRefreshToken(member, refreshToken);
+
+        return TokenResponse.of(accessToken, refreshToken);
     }
 
     public String getKakaoAccessToken(String code) {
@@ -99,7 +111,15 @@ public class KakaoOauthService {
             return optionalMember.get();
         }
 
-        final Member member = new Member(nickName,email,platform);
+        final Member member = new Member(nickName, email, platform);
         return memberRepository.save(member);
+    }
+
+    private void saveOrUpdateRefreshToken(Member member, String refreshToken) {
+        tokenRepository.findByMember(member)
+                .ifPresentOrElse(
+                        token -> token.changeToken(refreshToken),
+                        () -> tokenRepository.save(new Token(member, refreshToken))
+                );
     }
 }
