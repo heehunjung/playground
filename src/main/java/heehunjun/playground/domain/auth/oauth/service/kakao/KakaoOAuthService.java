@@ -1,6 +1,7 @@
 package heehunjun.playground.domain.auth.oauth.service.kakao;
 
 import heehunjun.playground.domain.auth.jwt.JwtTokenProvider;
+import heehunjun.playground.domain.auth.oauth.client.KakaoOAuthClient;
 import heehunjun.playground.domain.auth.oauth.config.KakaoProperties;
 import heehunjun.playground.domain.member.domain.Member;
 import heehunjun.playground.domain.member.domain.MemberRepository;
@@ -36,11 +37,15 @@ public class KakaoOAuthService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
+    private final KakaoOAuthClient kakaoOAuthClient;
 
     // todo : 중복 로그인 ? ? ?
-    public TokenResponse createToken(Map<String, Object> userInfo) {
-        Map<String, Object> properties = (Map<String, Object>) userInfo.get("properties");
+    public TokenResponse createToken(final String code) {
+        KakaoTokenResponse kakaoTokenResponse = kakaoOAuthClient.getKakaoAccessToken(code);
+        String kakaoAccessToken = kakaoTokenResponse.getAccessToken();
 
+        Map<String, Object> userInfo = kakaoOAuthClient.getUserInfo(kakaoAccessToken);
+        Map<String, Object> properties = (Map<String, Object>) userInfo.get("properties");
         final String nickname = (String) properties.get("nickname");
         final String email = (String) properties.get("email");
         final Member member = createMemberIfNotExist(KAKAO, nickname, email);
@@ -49,62 +54,7 @@ public class KakaoOAuthService {
         final String refreshToken = jwtTokenProvider.generateRefreshToken(member.getEmail());
 
         saveOrUpdateRefreshToken(member, refreshToken);
-
         return TokenResponse.of(accessToken, refreshToken);
-    }
-
-    public String getKakaoAccessToken(String code) {
-        log.info("[+| Kakao Login Authorization Code: {}", code);
-        log.info("authVariable: {}", kakaoProperties);
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("code", code);
-        params.add("client_id", kakaoProperties.getKakaoClientId());
-        params.add("redirect_uri", REDIRECT_URL);
-        params.add("client_secret", kakaoProperties.getKakaoSecret());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-
-        try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(TOKEN_URL, request, Map.class);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                Map<String, Object> body = response.getBody();
-                return body != null ? (String) body.get("access_token") : null;
-            }
-        } catch (Exception e) {
-            log.error("Error while retrieving access token", e);
-        }
-        return null;
-    }
-
-    public Map<String, Object> getUserInfo(String accessToken) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
-
-        HttpEntity<Void> request = new HttpEntity<>(headers);
-
-        try {
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    USER_INFO_URL,
-                    org.springframework.http.HttpMethod.GET,
-                    request,
-                    Map.class
-            );
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-        } catch (Exception e) {
-            log.error("Error while retrieving user info", e);
-        }
-        return null;
     }
 
     private Member createMemberIfNotExist(String platform, String email, String nickName) {

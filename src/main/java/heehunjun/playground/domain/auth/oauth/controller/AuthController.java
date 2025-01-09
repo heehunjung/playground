@@ -4,6 +4,7 @@ import static java.lang.System.getenv;
 
 import heehunjun.playground.domain.auth.oauth.service.google.GoogleOAuthService;
 import heehunjun.playground.domain.auth.oauth.service.kakao.KakaoOAuthService;
+import heehunjun.playground.domain.token.domain.Token;
 import heehunjun.playground.domain.token.dto.TokenResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,44 +26,30 @@ public class AuthController {
     private static final String QUERY_AND_MARK = "&";
     private static final String QUERY_PARAM_ACCESS_TOKEN_KEY = "accessToken=";
     private static final String QUERY_PARAM_REFRESH_TOKEN_KEY = "refreshToken=";
-
+    private static final String BASE_URL = "/login";
     @Value("${base-domain.front}")
     private String baseDomain;
 
     private final KakaoOAuthService kakaoOauthService;
     private final GoogleOAuthService googleOauthService;
-
+    // todo: 추상화 방법
     @GetMapping("/kakao")
     public void oauth2Kakao(@RequestParam String code, HttpServletResponse response) throws IOException {
-        // 1. Access Token 요청
-        String accessToken = kakaoOauthService.getKakaoAccessToken(code);
-        if (accessToken == null) {
-            throw new RuntimeException("Access token is null");
-        }
+        final TokenResponse tokens = kakaoOauthService.createToken(code);
+        final String accessToken = tokens.getAccessToken();
+        final String refreshToken = tokens.getRefreshToken();
 
-        // 2. 사용자 정보 요청
-        Map<String, Object> userInfo = kakaoOauthService.getUserInfo(accessToken);
-        if (userInfo == null) {
-            throw new RuntimeException("UserInfo is null");
-        }
-
-        final String baseLine = "/login";
-        TokenResponse token = kakaoOauthService.createToken(userInfo);
-        String url = generateUrl(baseLine, token.getAccessToken(), token.getRefreshToken());
-
+        String url = generateUrl(BASE_URL, accessToken, refreshToken);
         response.sendRedirect(url);
     }
 
     @GetMapping("/google")
     public void oauth2Google(final HttpServletResponse response, @RequestParam final String code) throws IOException {
-        log.info("여기");
-        final String baseUrl = "/login";
         final TokenResponse tokens = googleOauthService.createToken(code);
         final String accessToken = tokens.getAccessToken();
         final String refreshToken = tokens.getRefreshToken();
 
-        String url = generateUrl(baseUrl, accessToken, refreshToken);
-        log.info("url = {}", url);
+        String url = generateUrl(BASE_URL, accessToken, refreshToken);
         response.sendRedirect(url);
     }
 
