@@ -19,7 +19,6 @@ public class JwtTokenExtractor {
         }
         final String logMessage = "[인증 실패]엑세스 토큰 추출 실패 - 토큰 : " + accessToken;
         throw new RuntimeException(logMessage);
-        //todo: 커스텀 언체크드 예외 만들어줘야 한다.
     }
 
     public String extractRefreshToken(final HttpServletRequest request) {
@@ -29,6 +28,5 @@ public class JwtTokenExtractor {
         }
         final String logMessage = "[인증 실패]리프레쉬 토큰 추출 실패 - 토큰 : " + refreshToken;
         throw new RuntimeException(logMessage);
-        //todo: 커스텀 언체크드 예외 만들어줘야 한다.
     }
 }
