@@ -25,7 +25,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build -x test -Dspring.profiles.active=prod
         
       # 프론트 배포 아직 안함
 #      - name: Set up Node.js
