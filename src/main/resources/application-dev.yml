@@ -1,0 +1,44 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:h2:mem:database
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create  # 상황에 따라 'update', 'create-drop' 등으로 조정
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
+jwt:
+  access:
+    secret: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    expiration: 1800000  # 30분
+  refresh:
+    secret: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    expiration: 86400000 # 1일
+
+oauth:
+  google:
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+    end-point: https://accounts.google.com/o/oauth2/v2/auth
+    response-type: code
+    scopes: profile, email
+    access-type: online
+    token-uri: https://oauth2.googleapis.com/token
+    redirect-uri: ${GOOGLE_REDIRECT_URL}
+
+base-domain:
+  front: "http://localhost:8080"
+
+env:
+  test: "dev 환경이다."
