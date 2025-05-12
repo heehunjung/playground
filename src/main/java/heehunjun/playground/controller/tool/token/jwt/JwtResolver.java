@@ -1,7 +1,7 @@
 package heehunjun.playground.controller.tool.token.jwt;
 
 import heehunjun.playground.exception.code.ClientErrorCode;
-import heehunjun.playground.exception.hhjClientException;
+import heehunjun.playground.exception.HhjClientException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -9,7 +9,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import java.nio.charset.StandardCharsets;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,9 +26,9 @@ public class JwtResolver {
         try {
             return getTokenParser(secret).parseClaimsJws(token);
         } catch (ExpiredJwtException e) {
-            throw new hhjClientException(ClientErrorCode.EXPIRED_TOKEN);
+            throw new HhjClientException(ClientErrorCode.EXPIRED_TOKEN);
         } catch (JwtException e) {
-            throw new hhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER);
+            throw new HhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER);
         }
     }
 
