@@ -20,7 +20,7 @@ public class JwtManager {
     private long jwtRefreshTokenExpirationInMs;
 
     private final JwtProvider jwtProvider;
-    private final JwtExtractor jwtExtractor;
+    private final JwtResolver jwtResolver;
 
     public String generateAccessToken(String email) {
         return jwtProvider.generateToken(email, jwtAccessTokenSecret, jwtAccessTokenExpirationInMs);
@@ -31,10 +31,10 @@ public class JwtManager {
     }
 
     public String extractAccessToken(String token) {
-        return jwtExtractor.extractEmail(token, jwtAccessTokenSecret);
+        return jwtResolver.extractEmail(token, jwtAccessTokenSecret);
     }
 
     public String extractRefreshToken(String token) {
-        return jwtExtractor.extractEmail(token, jwtRefreshTokenSecret);
+        return jwtResolver.extractEmail(token, jwtRefreshTokenSecret);
     }
 }

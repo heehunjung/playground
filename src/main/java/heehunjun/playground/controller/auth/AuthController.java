@@ -1,7 +1,5 @@
 package heehunjun.playground.controller.auth;
 
-import static java.lang.System.getenv;
-
 import heehunjun.playground.service.auth.google.GoogleOAuthService;
 import heehunjun.playground.service.auth.kakao.KakaoOAuthService;
 import heehunjun.playground.dto.token.TokenResponse;
@@ -26,11 +24,11 @@ public class AuthController {
     private static final String QUERY_PARAM_REFRESH_TOKEN_KEY = "refreshToken=";
     private static final String BASE_URL = "/login";
 
-    @Value("${base-domain.front}")
-    private String baseDomain;
-
     private final KakaoOAuthService kakaoOauthService;
     private final GoogleOAuthService googleOauthService;
+
+    @Value("${base-domain.front}")
+    private String baseDomain;
 
     @GetMapping("/kakao")
     public void oauth2Kakao(@RequestParam String code, HttpServletResponse response) throws IOException {
@@ -43,7 +41,7 @@ public class AuthController {
     }
 
     @GetMapping("/google")
-    public void oauth2Google(final HttpServletResponse response, @RequestParam final String code) throws IOException {
+    public void oauth2Google(final HttpServletResponse response, @RequestParam String code) throws IOException {
         final TokenResponse tokens = googleOauthService.createToken(code);
         final String accessToken = tokens.getAccessToken();
         final String refreshToken = tokens.getRefreshToken();
