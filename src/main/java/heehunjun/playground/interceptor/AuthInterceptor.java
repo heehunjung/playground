@@ -1,6 +1,5 @@
 package heehunjun.playground.interceptor;
 
-import heehunjun.playground.controller.tool.cookie.CookieManager;
 import heehunjun.playground.controller.tool.token.jwt.JwtManager;
 import heehunjun.playground.exception.code.ClientErrorCode;
 import heehunjun.playground.exception.hhjClientException;
@@ -25,17 +24,18 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) {
-        String accessToken = Arrays.stream(request.getCookies())
+        String accessToken = String.valueOf(Arrays.stream(request.getCookies())
                 .filter(cookie -> cookie.getName().equals(ACCESS_TOKEN))
                 .map(Cookie::getValue)
-                .findFirst()
-                .orElseThrow(() -> new hhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER));
+                .findFirst());
+        if (accessToken == null) {
+            throw new hhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER);
+        }
         String email = jwtManager.extractAccessToken(accessToken);
         log.info("Extracted email: {}", email);
 
         if (email == null) {
-            response.setStatus(404);
-            return false;
+            throw new hhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER);
         }
         return true;
     }
