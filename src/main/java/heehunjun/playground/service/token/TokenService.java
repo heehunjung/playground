@@ -2,6 +2,7 @@ package heehunjun.playground.service.token;
 
 import heehunjun.playground.domain.token.Token;
 import heehunjun.playground.exception.HhjClientException;
+import heehunjun.playground.exception.code.ClientErrorCode;
 import heehunjun.playground.repository.token.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,14 +18,14 @@ public class TokenService {
 
     private final TokenRepository tokenRepository;
 
-    public Token getToken(final String refreshToken) {
+    public Token getToken(String refreshToken) {
         return tokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new HhjClientException("로그인 정보가 없습니다.", HttpStatus.UNAUTHORIZED));
+                .orElseThrow(() -> new HhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER));
     }
 
-    public void deleteToken(final String refreshToken) {
-        final Token token = tokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new HhjClientException("로그인 정보가 없습니다.", HttpStatus.UNAUTHORIZED));
+    public void deleteToken(String refreshToken) {
+        Token token = tokenRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new HhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER));
         tokenRepository.delete(token);
     }
 }

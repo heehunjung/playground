@@ -10,7 +10,7 @@ public enum ServerErrorCode implements ErrorResponse {
     private HttpStatus httpStatus;
     private String message;
 
-    private ServerErrorCode(HttpStatus httpStatus, String message) {
+    ServerErrorCode(HttpStatus httpStatus, String message) {
         this.httpStatus = httpStatus;
         this.message = message;
     }

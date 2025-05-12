@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+// TODO : Oauth 추상화, member 관련 로직 분리
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
