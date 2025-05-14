@@ -28,12 +28,11 @@ public class KakaoOAuthClient implements OAuthClient {
     @Override
     public OauthToken getOauthToken(String code) {
         MultiValueMap<String, String> params = generateParams(code);
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params);
 
         return restClient.post()
                 .uri(kakaoProperties.getTOKEN_URL())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(request)
+                .body(params)
                 .retrieve()
 //              .onStatus(HttpStatusCode::isError, new OAuthClient);
                 .body(OauthToken.class);

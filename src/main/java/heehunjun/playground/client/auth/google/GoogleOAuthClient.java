@@ -3,11 +3,12 @@ package heehunjun.playground.client.auth.google;
 import heehunjun.playground.client.auth.OAuthClient;
 import heehunjun.playground.dto.member.MemberInfo;
 import heehunjun.playground.dto.member.OauthToken;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.json.JacksonJsonParser;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,27 +25,29 @@ public class GoogleOAuthClient implements OAuthClient {
     private final GoogleProperties googleProperties;
     private final RestClient restClient;
 
-    public GoogleOAuthClient(RestClient.Builder restClientBuilder) {
-        this.googleProperties = new GoogleProperties();
+    public GoogleOAuthClient(RestClient.Builder restClientBuilder, GoogleProperties googleProperties) {
         this.restClient = restClientBuilder.build();
+        this.googleProperties = googleProperties;
     }
 
     @Override
     public OauthToken getOauthToken(String code) {
         MultiValueMap<String, String> params = generateParams(code);
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params);
-
+        log.error("uri: {}", googleProperties.getTokenUri());
+        log.error("client: {}", googleProperties.getClientId());
+        log.error("code: {}", code);
         return restClient.post()
                 .uri(googleProperties.getTokenUri())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(request)
+                .body(params)
                 .retrieve()
                 .body(OauthToken.class);
     }
 
     private MultiValueMap<String, String> generateParams(String code) {
+        String decodedVerificationCode = URLDecoder.decode(code, StandardCharsets.UTF_8);
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("code", code);
+        params.add("code", decodedVerificationCode);
         params.add("client_id", googleProperties.getClientId());
         params.add("client_secret", googleProperties.getClientSecret());
         params.add("redirect_uri", googleProperties.getRedirectUri());

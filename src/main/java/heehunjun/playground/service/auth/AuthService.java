@@ -17,6 +17,7 @@ public class AuthService {
 
     public MemberInfo getMemberInfo(OAuthType type, String code) {
         OauthToken request = oauthContext.getOauthToken(type, code);
+
         return oauthContext.getMemberInfo(type, request);
     }
 }

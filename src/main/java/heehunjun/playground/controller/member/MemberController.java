@@ -14,7 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +30,7 @@ public class MemberController {
     private final CookieManager cookieManager;
     private final MemberService memberService;
 
-    @GetMapping("/api/member")
+    @PostMapping("/api/member")
     public ResponseEntity<MemberResponse> login(@RequestBody MemberRequest request) {
         MemberInfo memberInfo = authService.getMemberInfo(request.type(), request.code());
         String accessToken = jwtManager.generateAccessToken(memberInfo.email());

@@ -4,9 +4,11 @@ import heehunjun.playground.dto.member.MemberInfo;
 import heehunjun.playground.dto.member.OauthToken;
 import heehunjun.playground.exception.HhjServerException;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class OAuthContext {
 
@@ -25,7 +27,8 @@ public class OAuthContext {
     public MemberInfo getMemberInfo(OAuthType type, OauthToken request) {
         OAuthClient client = getClient(type);
 
-        return client.getMemberInfo(request.token());
+        log.info("token {}", request.accessToken());
+        return client.getMemberInfo(request.accessToken());
     }
 
     private OAuthClient getClient(OAuthType type) {
