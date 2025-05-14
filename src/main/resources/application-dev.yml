@@ -15,7 +15,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create  # 상황에 따라 'update', 'create-drop' 등으로 조정
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true

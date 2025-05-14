@@ -13,10 +13,11 @@ public class CookieProvider {
 
     public ResponseCookie generateCookie(String key, String value, long maxAge) {
         return ResponseCookie.from(key, value)
+                .maxAge(Duration.ofMillis(maxAge))
                 .path(PATH)
                 .sameSite(SAME_SITE)
                 .httpOnly(true)
-                .maxAge(Duration.ofMillis(maxAge))
+                .secure(true)
                 .build();
     }
 }

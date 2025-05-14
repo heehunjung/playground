@@ -1,65 +1,46 @@
-package heehunjun.playground.controller.auth;
+package heehunjun.playground.controller.member;
 
-import heehunjun.playground.client.auth.google.GoogleOAuthService;
-import heehunjun.playground.client.auth.kakao.KakaoOAuthService;
-import heehunjun.playground.dto.token.TokenResponse;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import heehunjun.playground.controller.tool.cookie.CookieManager;
+import heehunjun.playground.controller.tool.token.jwt.JwtManager;
+import heehunjun.playground.dto.member.MemberInfo;
+import heehunjun.playground.dto.member.MemberRequest;
+import heehunjun.playground.dto.member.MemberResponse;
+import heehunjun.playground.service.auth.AuthService;
+import heehunjun.playground.service.member.MemberService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/oauth2")
-public class AuthController {
-    private static final String QUERY_START_MARK = "?";
-    private static final String QUERY_AND_MARK = "&";
-    private static final String QUERY_PARAM_ACCESS_TOKEN_KEY = "accessToken=";
-    private static final String QUERY_PARAM_REFRESH_TOKEN_KEY = "refreshToken=";
-    private static final String BASE_URL = "/login";
+@RequestMapping
+public class MemberController {
 
-    private final KakaoOAuthService kakaoOauthService;
-    private final GoogleOAuthService googleOauthService;
+    private final AuthService authService;
+    private final JwtManager jwtManager;
+    private final CookieManager cookieManager;
+    private final MemberService memberService;
 
-    @Value("${base-domain.front}")
-    private String baseDomain;
+    @GetMapping("/api/member")
+    public ResponseEntity<MemberResponse> login(@RequestBody MemberRequest request) {
+        MemberInfo memberInfo = authService.getMemberInfo(request.type(), request.code());
+        String accessToken = jwtManager.generateAccessToken(memberInfo.email());
+        String refreshToken = jwtManager.generateRefreshToken(memberInfo.email());
+        ResponseCookie responseCookie = cookieManager.generateRefreshToken(refreshToken);
+        MemberResponse result = memberService.createMember(memberInfo, request.type().name());
 
-    @GetMapping("/kakao")
-    public void oauth2Kakao(@RequestParam String code, HttpServletResponse response) throws IOException {
-        final TokenResponse tokens = kakaoOauthService.createToken(code);
-        final String accessToken = tokens.getAccessToken();
-        final String refreshToken = tokens.getRefreshToken();
-
-        String url = generateUrl(BASE_URL, accessToken, refreshToken);
-        response.sendRedirect(url);
-    }
-
-    @GetMapping("/google")
-    public void oauth2Google(final HttpServletResponse response, @RequestParam String code) throws IOException {
-        final TokenResponse tokens = googleOauthService.createToken(code);
-        final String accessToken = tokens.getAccessToken();
-        final String refreshToken = tokens.getRefreshToken();
-
-        String url = generateUrl(BASE_URL, accessToken, refreshToken);
-        response.sendRedirect(url);
-    }
-
-    private String generateUrl(final String baseUrl, final String accessToken, final String refreshToken) {
-        StringBuilder sb = new StringBuilder();
-        StringBuilder url = sb.append(baseDomain)
-                .append(baseUrl)
-                .append(QUERY_START_MARK)
-                .append(QUERY_PARAM_ACCESS_TOKEN_KEY)
-                .append(accessToken)
-                .append(QUERY_AND_MARK)
-                .append(QUERY_PARAM_REFRESH_TOKEN_KEY)
-                .append(refreshToken);
-        return url.toString();
+        return ResponseEntity.status(HttpStatus.OK)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(result);
     }
 }
