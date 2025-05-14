@@ -1,7 +1,7 @@
 package heehunjun.playground.controller.auth;
 
-import heehunjun.playground.service.auth.google.GoogleOAuthService;
-import heehunjun.playground.service.auth.kakao.KakaoOAuthService;
+import heehunjun.playground.client.auth.google.GoogleOAuthService;
+import heehunjun.playground.client.auth.kakao.KakaoOAuthService;
 import heehunjun.playground.dto.token.TokenResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;

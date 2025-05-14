@@ -1,4 +1,4 @@
-package heehunjun.playground.controller.tool.token.googleToken;
+package heehunjun.playground.client.auth.google;
 
 import java.util.List;
 import lombok.Getter;
@@ -30,18 +30,4 @@ public class GoogleProperties {
 
     @Value("${oauth.google.redirect-uri}")
     private String redirectUri;
-
-    @Override
-    public String toString() {
-        return "GoogleProperties{" +
-                "clientId='" + clientId + '\'' +
-                ", clientSecret='" + clientSecret + '\'' +
-                ", endPoint='" + endPoint + '\'' +
-                ", responseType='" + responseType + '\'' +
-                ", scopes=" + scopes +
-                ", accessType='" + accessType + '\'' +
-                ", tokenUri='" + tokenUri + '\'' +
-                ", redirectUri='" + redirectUri + '\'' +
-                '}';
-    }
 }
