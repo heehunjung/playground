@@ -15,6 +15,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     public MemberResponse createMember(MemberInfo memberInfo, String type) {
         Member member = memberRepository.findByEmail(memberInfo.email())
                 .orElseGet(() -> memberRepository.save(

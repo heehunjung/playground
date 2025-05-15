@@ -1,19 +1,26 @@
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: test
+
   datasource:
-    url: ${DATASOURCE_URL}
-    username: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:database
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
+    defer-datasource-initialization: true
+
 jwt:
   access:
     secret: "testtesttesthhjhhj"
@@ -21,6 +28,7 @@ jwt:
   refresh:
     secret: "testtesttesthhjhhj"
     expiration: 86400000 # 1일
+
 oauth:
   google:
     end-point: https://accounts.google.com/o/oauth2/v2/auth

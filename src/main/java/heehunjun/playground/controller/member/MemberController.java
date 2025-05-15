@@ -33,11 +33,13 @@ public class MemberController {
     @PostMapping("/api/member")
     public ResponseEntity<MemberResponse> login(@RequestBody MemberRequest request) {
         MemberInfo memberInfo = authService.getMemberInfo(request.type(), request.code());
+        //Oauth
         String accessToken = jwtManager.generateAccessToken(memberInfo.email());
         String refreshToken = jwtManager.generateRefreshToken(memberInfo.email());
         ResponseCookie responseCookie = cookieManager.generateRefreshToken(refreshToken);
+        //Token
         MemberResponse result = memberService.createMember(memberInfo, request.type().name());
-
+        //Save <- transaction
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())

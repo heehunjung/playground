@@ -28,11 +28,11 @@ public class AuthInterceptor implements HandlerInterceptor {
                 .filter(cookie -> cookie.getName().equals(ACCESS_TOKEN))
                 .map(Cookie::getValue)
                 .findFirst());
+
         if (accessToken == null) {
             throw new HhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER);
         }
         String email = jwtManager.extractAccessToken(accessToken);
-        log.info("Extracted email: {}", email);
 
         if (email == null) {
             throw new HhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER);

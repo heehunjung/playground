@@ -1,10 +1,10 @@
-package heehunjun.playground.domain.member;
+package heehunjun.playground.domain.article;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,24 +12,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Member {
+public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    private String nickName;
-
-    @Email
-    private String email;
+    private String title;
 
     @NotNull
-    private String oauth;
-
-    public Member(String nickName, String email, String oauth) {
-        this.nickName = nickName;
-        this.email = email;
-        this.oauth = oauth;
-    }
+    private String content;
 }
