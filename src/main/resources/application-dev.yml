@@ -23,25 +23,26 @@ spring:
 
 jwt:
   access:
-    secret: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    secret: "testtesttesthhjhhj"
     expiration: 1800000  # 30분
   refresh:
-    secret: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    secret: "testtesttesthhjhhj"
     expiration: 86400000 # 1일
 
 oauth:
   google:
-    client-id: ${GOOGLE_CLIENT_ID}
-    client-secret: ${GOOGLE_CLIENT_SECRET}
     end-point: https://accounts.google.com/o/oauth2/v2/auth
     response-type: code
     scopes: profile, email
     access-type: online
     token-uri: https://oauth2.googleapis.com/token
     redirect-uri: ${GOOGLE_REDIRECT_URL}
-
-base-domain:
-  front: "http://localhost:8080"
-
-env:
-  test: "dev 환경이다."
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+  kakao:
+    token-uri: https://kauth.kakao.com/oauth/token
+    redirect-uri: http://localhost:8080/oauth2/kakao
+    user-info-uri: https://kapi.kakao.com/v2/user/me
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+    api-key: ${KAKAO_API_KEY}

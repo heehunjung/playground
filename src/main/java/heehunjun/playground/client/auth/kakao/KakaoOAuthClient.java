@@ -20,8 +20,8 @@ public class KakaoOAuthClient implements OAuthClient {
     private final KakaoProperties kakaoProperties;
     private final RestClient restClient;
 
-    public KakaoOAuthClient(RestClient.Builder restClientBuilder) {
-        this.kakaoProperties = new KakaoProperties();
+    public KakaoOAuthClient(RestClient.Builder restClientBuilder, KakaoProperties kakaoProperties) {
+        this.kakaoProperties = kakaoProperties;
         this.restClient = restClientBuilder.build();
     }
 

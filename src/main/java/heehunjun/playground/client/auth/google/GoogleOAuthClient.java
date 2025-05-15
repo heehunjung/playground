@@ -21,6 +21,7 @@ public class GoogleOAuthClient implements OAuthClient {
 
     private static final String OAUTH_GRANT_TYPE = "authorization_code";
     private static final int PAYLOAD_INDEX = 1;
+    public static final String REGEX = "\\.";
 
     private final GoogleProperties googleProperties;
     private final RestClient restClient;
@@ -33,9 +34,7 @@ public class GoogleOAuthClient implements OAuthClient {
     @Override
     public OauthToken getOauthToken(String code) {
         MultiValueMap<String, String> params = generateParams(code);
-        log.error("uri: {}", googleProperties.getTokenUri());
-        log.error("client: {}", googleProperties.getClientId());
-        log.error("code: {}", code);
+
         return restClient.post()
                 .uri(googleProperties.getTokenUri())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -57,8 +56,8 @@ public class GoogleOAuthClient implements OAuthClient {
 
     @Override
     public MemberInfo getMemberInfo(String token) {
-        String payLoad = token.split("\\.")[PAYLOAD_INDEX];
-        String decodedPayLoad = new String(Base64.getUrlDecoder().decode(payLoad));
+        String payLoad = token.split(REGEX)[PAYLOAD_INDEX];
+        String decodedPayLoad = new String(Base64.getUrlDecoder().decode(payLoad)); // <- !!!!!!!!!!!!!!!!!!!!!!!!
         JacksonJsonParser jacksonJsonParser = new JacksonJsonParser();
         Map<String, Object> parsedPayLoad = jacksonJsonParser.parseMap(decodedPayLoad);
 

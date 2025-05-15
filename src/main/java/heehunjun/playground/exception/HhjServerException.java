@@ -1,6 +1,5 @@
 package heehunjun.playground.exception;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 public class HhjServerException extends HhjException {
