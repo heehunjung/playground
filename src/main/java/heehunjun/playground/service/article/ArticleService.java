@@ -17,8 +17,8 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     @Transactional(readOnly = true)
-    public ArticleResponses findByTitle(String title) {
-        List<Article> articles = articleRepository.findAll();
+    public ArticleResponses findByCond(String cond) {
+        List<Article> articles = articleRepository.findByCond(cond);
 
         return ArticleResponses.of(articles);
     }

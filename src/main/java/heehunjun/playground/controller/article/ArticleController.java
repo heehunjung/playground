@@ -15,10 +15,9 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    @GetMapping("/api/article")
-    public ResponseEntity<ArticleResponses> getArticleByTitle(@RequestParam String title) {
-        ArticleResponses result = articleService.findByTitle(title);
-
+    @GetMapping("/api/article/search")
+    public ResponseEntity<ArticleResponses> getArticleByCond(@RequestParam String cond) {
+        ArticleResponses result = articleService.findByCond(cond);
         return ResponseEntity.ok(result);
     }
 
