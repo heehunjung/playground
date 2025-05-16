@@ -13,4 +13,7 @@ public interface ArticleRepository  extends JpaRepository<Article, Long> {
     //간단하게..
     @Query("SELECT a FROM Article a WHERE a.title LIKE %:cond% OR a.content LIKE %:cond%")
     List<Article> findByCond(@Param("cond") String cond);
+
+    @Query("SELECT COUNT(1) FROM Article")
+    long myCount();
 }

@@ -1,6 +1,5 @@
 package heehunjun.playground.controller.article;
 
-import heehunjun.playground.dto.article.ArticleResponse;
 import heehunjun.playground.dto.article.ArticleResponses;
 import heehunjun.playground.service.article.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -27,4 +26,17 @@ public class ArticleController {
 
         return ResponseEntity.ok(result);
     }
+    // before: 11.15s
+
+    @GetMapping("/api/article/count")
+    public ResponseEntity<Long> getArticleCount() {
+        long result = articleService.countArticle();
+
+        return ResponseEntity.ok(result);
+    }
+    /**
+     * total: 2097152
+     * before : 577ms
+     * after  : 563ms
+    **/
 }

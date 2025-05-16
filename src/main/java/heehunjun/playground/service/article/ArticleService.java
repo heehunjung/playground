@@ -29,4 +29,10 @@ public class ArticleService {
 
         return ArticleResponses.of(articles);
     }
+
+    @Transactional(readOnly = true)
+    public long countArticle() {
+//        return articleRepository.count();
+        return articleRepository.myCount();
+    }
 }
