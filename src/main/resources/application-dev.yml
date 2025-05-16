@@ -10,7 +10,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -23,10 +23,10 @@ jwt:
     expiration: 86400000 # 1일
 oauth:
   google:
-    end-point: https://accounts.google.com/o/oauth2/v2/auth
-    response-type: code
     scopes: profile, email
+    response-type: code
     access-type: online
+    end-point: https://accounts.google.com/o/oauth2/v2/auth
     token-uri: https://oauth2.googleapis.com/token
     redirect-uri: ${GOOGLE_REDIRECT_URL}
     client-id: ${GOOGLE_CLIENT_ID}
@@ -38,3 +38,4 @@ oauth:
     client-id: ${KAKAO_CLIENT_ID}
     client-secret: ${KAKAO_CLIENT_SECRET}
     api-key: ${KAKAO_API_KEY}
+
