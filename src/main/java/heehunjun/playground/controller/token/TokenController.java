@@ -31,13 +31,11 @@ public class TokenController {
         Token token = tokenService.getToken(refreshToken);
         TokenResponse tokenResponse = getTokenResponse(refreshToken, token);
 
-        ResponseCookie accessTokenCookie = cookieManager.createAccessCookie(
-                tokenResponse.getAccessToken());
         ResponseCookie refreshTokenCookie = cookieManager.generateRefreshToken(
                 tokenResponse.getRefreshToken());
 
         return ResponseEntity.noContent()
-                .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
+                .header(HttpHeaders.AUTHORIZATION, tokenResponse.getAccessToken())
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
                 .build();
     }

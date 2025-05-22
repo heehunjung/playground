@@ -1,7 +1,5 @@
 application:
   name: playground
-
 spring:
-    profiles:
-      default: dev
-
+  profiles:
+    active: dev

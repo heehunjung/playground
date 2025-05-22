@@ -1,5 +1,4 @@
 spring:
-
   datasource:
     url: ${AWS_ENDPOINT}
     username: ${AWS_USERNAME}

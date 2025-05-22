@@ -10,31 +10,24 @@ public class JwtManager {
 
     public static final String EMAIL_KEY = "email";
 
-    @Value("${jwt.access.secret}")
-    private String jwtAccessTokenSecret;
-    @Value("${jwt.access.expiration}")
-    private long jwtAccessTokenExpirationInMs;
-    @Value("${jwt.refresh.secret}")
-    private String jwtRefreshTokenSecret;
-    @Value("${jwt.refresh.expiration}")
-    private long jwtRefreshTokenExpirationInMs;
+    public final JwtProperties jwtProperties;
 
     private final JwtProvider jwtProvider;
     private final JwtResolver jwtResolver;
 
     public String generateAccessToken(String email) {
-        return jwtProvider.generateToken(email, jwtAccessTokenSecret, jwtAccessTokenExpirationInMs);
+        return jwtProvider.generateToken(email, jwtProperties.getAccessTokenSecret(), jwtProperties.getAccessTokenExpiration());
     }
 
     public String generateRefreshToken(String email) {
-        return jwtProvider.generateToken(email, jwtRefreshTokenSecret, jwtRefreshTokenExpirationInMs);
+        return jwtProvider.generateToken(email, jwtProperties.getRefreshTokenSecret(), jwtProperties.getRefreshTokenExpiration());
     }
 
     public String extractAccessToken(String token) {
-        return jwtResolver.extractEmail(token, jwtAccessTokenSecret);
+        return jwtResolver.extractEmail(token, jwtProperties.getAccessTokenSecret());
     }
 
     public String extractRefreshToken(String token) {
-        return jwtResolver.extractEmail(token, jwtRefreshTokenSecret);
+        return jwtResolver.extractEmail(token, jwtProperties.getRefreshTokenSecret());
     }
 }

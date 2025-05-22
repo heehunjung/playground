@@ -27,7 +27,11 @@ public class ArticleService {
     public ArticleResponses findAll() {
         List<Article> articles = articleRepository.findAll();
 
-        return ArticleResponses.of(articles);
+        //
+        for(Article article : articles) {
+            continue;
+        }
+        return null;
     }
 
     @Transactional(readOnly = true)
