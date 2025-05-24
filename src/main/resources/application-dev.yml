@@ -5,12 +5,21 @@ spring:
     password: ${DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    show-sql: true
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         format_sql: true
+        generate_statistics: true
+  flyway:
+    baseline-on-migrate: true
+
+logging:
+  level:
+    org.hibernate.SQL: info                    # 실행된 SQL 쿼리
+    org.hibernate.engine.jdbc.spi.SqlStatementLogger: info  # 쿼리 실행 시간
+    org.hibernate.stat: info
+
 jwt:
   access:
     secret: "testtesttesthhjhhj"
@@ -18,6 +27,7 @@ jwt:
   refresh:
     secret: "testtesttesthhjhhj"
     expiration: 86400000 # 1일
+
 oauth:
   google:
     scopes: profile, email
@@ -35,4 +45,3 @@ oauth:
     client-id: ${KAKAO_CLIENT_ID}
     client-secret: ${KAKAO_CLIENT_SECRET}
     api-key: ${KAKAO_API_KEY}
-

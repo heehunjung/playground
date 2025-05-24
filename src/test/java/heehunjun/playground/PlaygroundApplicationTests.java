@@ -9,9 +9,4 @@ class PlaygroundApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
-	@Test
-	void temp() {
-
-	}
 }

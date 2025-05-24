@@ -19,6 +19,7 @@ public class ArticleController {
     @GetMapping("/api/article/search")
     public ResponseEntity<ArticleResponses> getArticleByCond(@RequestParam String cond) {
         ArticleResponses result = articleService.findByCond(cond);
+
         return ResponseEntity.ok(result);
     }
 
