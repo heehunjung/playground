@@ -8,19 +8,6 @@ spring:
     console:
       enabled: true
       path: /h2-console
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-    defer-datasource-initialization: true
-logging:
-  level:
-    org.hibernate.SQL: debug        # 실행된 SQL 쿼리 로깅
-    org.hibernate.stat: debug       # 쿼리 실행 시간 및 통계 정보 로깅
-    org.hibernate.type.descriptor.sql: trace  # 쿼리 파라미터 값 로깅
 jwt:
   access:
     secret: "testtesttesthhjhhj"
@@ -29,20 +16,3 @@ jwt:
     secret: "testtesttesthhjhhj"
     expiration: 86400000 # 1일
 
-oauth:
-  google:
-    end-point: https://accounts.google.com/o/oauth2/v2/auth
-    response-type: code
-    scopes: profile, email
-    access-type: online
-    token-uri: https://oauth2.googleapis.com/token
-    redirect-uri: ${GOOGLE_REDIRECT_URL}
-    client-id: ${GOOGLE_CLIENT_ID}
-    client-secret: ${GOOGLE_CLIENT_SECRET}
-  kakao:
-    token-uri: https://kauth.kakao.com/oauth/token
-    redirect-uri: http://localhost:8080/oauth2/kakao
-    user-info-uri: https://kapi.kakao.com/v2/user/me
-    client-id: ${KAKAO_CLIENT_ID}
-    client-secret: ${KAKAO_CLIENT_SECRET}
-    api-key: ${KAKAO_API_KEY}

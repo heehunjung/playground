@@ -5,16 +5,9 @@ spring:
     password: ${AWS_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    output:
-      ansi:
-        enabled: always
+logging:
+  discord-error:
+    webhook-url: ${DISCORD_WEBHOOK_URI}
 
 jwt:
   access:
@@ -24,20 +17,3 @@ jwt:
     secret: ${REFRESH_TOKEN_SECRET}
     expiration: ${REFRESH_TOKEN_EXPIRATION}
 
-oauth:
-  google:
-    end-point: https://accounts.google.com/o/oauth2/v2/auth
-    response-type: code
-    scopes: profile, email
-    access-type: online
-    token-uri: https://oauth2.googleapis.com/token
-    redirect-uri: ${GOOGLE_REDIRECT_URL}
-    client-id: ${GOOGLE_CLIENT_ID}
-    client-secret: ${GOOGLE_CLIENT_SECRET}
-  kakao:
-    token-uri: https://kauth.kakao.com/oauth/token
-    redirect-uri: http://localhost:8080/oauth2/kakao
-    user-info-uri: https://kapi.kakao.com/v2/user/me
-    client-id: ${KAKAO_CLIENT_ID}
-    client-secret: ${KAKAO_CLIENT_SECRET}
-    api-key: ${KAKAO_API_KEY}

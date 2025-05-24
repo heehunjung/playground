@@ -4,44 +4,9 @@ spring:
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-        generate_statistics: true
-  flyway:
-    baseline-on-migrate: true
 
 logging:
-  level:
-    org.hibernate.SQL: info                    # 실행된 SQL 쿼리
-    org.hibernate.engine.jdbc.spi.SqlStatementLogger: info  # 쿼리 실행 시간
-    org.hibernate.stat: info
-
-jwt:
-  access:
-    secret: "testtesttesthhjhhj"
-    expiration: 1800000  # 30분
-  refresh:
-    secret: "testtesttesthhjhhj"
-    expiration: 86400000 # 1일
-
-oauth:
-  google:
-    scopes: profile, email
-    response-type: code
-    access-type: online
-    end-point: https://accounts.google.com/o/oauth2/v2/auth
-    token-uri: https://oauth2.googleapis.com/token
-    redirect-uri: ${GOOGLE_REDIRECT_URL}
-    client-id: ${GOOGLE_CLIENT_ID}
-    client-secret: ${GOOGLE_CLIENT_SECRET}
-  kakao:
-    token-uri: https://kauth.kakao.com/oauth/token
-    redirect-uri: http://localhost:8080/oauth2/kakao
-    user-info-uri: https://kapi.kakao.com/v2/user/me
-    client-id: ${KAKAO_CLIENT_ID}
-    client-secret: ${KAKAO_CLIENT_SECRET}
-    api-key: ${KAKAO_API_KEY}
+#  level:
+#    root: debug
+  discord-error:
+    webhook-url: ${DISCORD_WEBHOOK_URI}

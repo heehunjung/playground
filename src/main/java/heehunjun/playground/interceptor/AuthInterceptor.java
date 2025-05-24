@@ -24,6 +24,10 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) {
+        if(request.getCookies() == null || request.getCookies().length == 0) {
+            throw new HhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER);
+        }
+
         String accessToken = String.valueOf(Arrays.stream(request.getCookies())
                 .filter(cookie -> cookie.getName().equals(ACCESS_TOKEN))
                 .map(Cookie::getValue)
