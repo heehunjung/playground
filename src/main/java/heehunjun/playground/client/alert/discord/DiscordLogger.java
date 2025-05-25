@@ -4,10 +4,12 @@ import heehunjun.playground.client.alert.Logger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 public class DiscordLogger implements Logger {
 
     private final DiscordProperties discordProperties;
@@ -32,31 +34,48 @@ public class DiscordLogger implements Logger {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(discordMessage)
                 .retrieve()
-                .bodyToMono(Void.class); // Discord 는 성공 시 204 No Content 반환
-                // 실패하면 ? -> 서버 에러로그 따로 저장 ?
+                .bodyToMono(Void.class) // Discord 는 성공 시 204 No Content
+                .onErrorResume(e -> {
+                    log.error("{}", e);
+                    return Mono.empty();
+                });
     }
 
     private DiscordMessage getDiscordMessage(Throwable e) {
         String content = "🚨 에러 발생";
-        DiscordMessage.Embed embed = new DiscordMessage.Embed(
-                "Error: " + e.getClass().getSimpleName(),
-                String.format(
-                        "Message: %s\nTime: %s\nStackTrace: %s",
-                        e.getMessage(),
-                        LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-                        getStackTraceAsString(e)
-                )
+
+        String title = "💥 예외 타입: " + e.getClass().getSimpleName();
+        String message = String.format(
+                """
+                📝 메시지     : %s
+                ⏰ 발생 시각 : %s
+                📌 스택 트레이스:
+                %s
+                """,
+                e.getMessage(),
+                LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                getStackTraceAsString(e)
         );
+
+        DiscordMessage.Embed embed = new DiscordMessage.Embed(title, message);
         return new DiscordMessage(content, List.of(embed));
     }
 
+
     private String getStackTraceAsString(Throwable e) {
         StringBuilder stackTrace = new StringBuilder();
-        stackTrace.append(e.toString()).append("\n");
-        for (StackTraceElement element : e.getStackTrace()) {
-            stackTrace.append("\tat ").append(element.toString()).append("\n");
+        stackTrace.append("```\n")
+                .append(e.toString())
+                .append("\n```");
+
+        StackTraceElement[] elements = e.getStackTrace();
+        int limit = Math.min(elements.length, 10);
+        for (int i = 0; i < limit; i++) {
+            stackTrace.append("```\n")
+                    .append(elements[i])
+                    .append("\n```");
         }
 
-        return stackTrace.length() > 1500 ? stackTrace.substring(0, 1500) + "..." : stackTrace.toString();
+        return stackTrace.toString();
     }
 }
