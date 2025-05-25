@@ -29,7 +29,6 @@ public class ArticleController {
 
         return ResponseEntity.ok(result);
     }
-    // before: 11.15s
 
     @GetMapping("/api/article/count")
     public ResponseEntity<Long> getArticleCount() {
@@ -37,9 +36,5 @@ public class ArticleController {
 
         return ResponseEntity.ok(result);
     }
-    /**
-     * total: 2097152
-     * before : 577ms
-     * after  : 563ms
-    **/
+
 }
