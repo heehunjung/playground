@@ -67,7 +67,7 @@ public class DiscordLogger implements Logger {
         stackTrace.append("```\n")
                 .append(e.toString())
                 .append("\n```");
-
+        // Discord 메세지 길이 제한
         StackTraceElement[] elements = e.getStackTrace();
         int limit = Math.min(elements.length, 10);
         for (int i = 0; i < limit; i++) {

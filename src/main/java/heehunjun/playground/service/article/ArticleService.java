@@ -27,16 +27,17 @@ public class ArticleService {
     public ArticleResponses findAll() {
         List<Article> articles = articleRepository.findAll();
 
-        //
-        for(Article article : articles) {
-            continue;
-        }
-        return null;
+        return ArticleResponses.of(articles);
     }
 
     @Transactional(readOnly = true)
     public long countArticle() {
-//        return articleRepository.count();
         return articleRepository.myCount();
+    }
+
+    @Transactional
+    public Long createArticle(Article article) {
+        return articleRepository.save(article)
+                .getId();
     }
 }
