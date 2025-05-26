@@ -11,6 +11,9 @@ public enum ClientErrorCode implements ErrorResponse {
 
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 멤버를 찾을 수 없습니다."),
 
+    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게시글을 찾을 수 없습니다."),
+
+
     // 대충..
     INVALID_TITLE_LENGTH(HttpStatus.BAD_REQUEST, "제목 길이가 잘못되었습니다."),
     INVALID_CONTENT_LENGTH(HttpStatus.BAD_REQUEST, "내용 길이가 잘못되었습니다.");

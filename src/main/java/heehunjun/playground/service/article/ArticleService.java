@@ -3,6 +3,9 @@ package heehunjun.playground.service.article;
 import heehunjun.playground.domain.article.Article;
 import heehunjun.playground.dto.article.ArticleResponse;
 import heehunjun.playground.dto.article.ArticleResponses;
+import heehunjun.playground.dto.article.ArticleUpdateRequest;
+import heehunjun.playground.exception.HhjClientException;
+import heehunjun.playground.exception.code.ClientErrorCode;
 import heehunjun.playground.repository.article.ArticleRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +38,22 @@ public class ArticleService {
         return articleRepository.myCount();
     }
 
+    @Transactional(readOnly = true)
+    public Article findById(Long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new HhjClientException(ClientErrorCode.ARTICLE_NOT_FOUND));
+    }
+
     @Transactional
     public Long createArticle(Article article) {
         return articleRepository.save(article)
                 .getId();
+    }
+
+    @Transactional
+    public ArticleResponse updateArticle(Article article, Article updatedArticle) {
+        article.update(updatedArticle);
+
+        return ArticleResponse.of(articleRepository.save(article));
     }
 }

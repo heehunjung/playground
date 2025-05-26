@@ -41,6 +41,14 @@ public class Article {
         this.member = member;
     }
 
+    public void update(Article article) {
+        validateTitle(article.getTitle());
+        validateContent(article.getContent());
+        this.title = article.getTitle();
+        this.content = article.getContent();
+        this.member = article.getMember();
+    }
+
     private void validateTitle(String title) {
         if (title.length() < 3 || title.length() > 25) {
             throw new HhjClientException(ClientErrorCode.INVALID_TITLE_LENGTH);

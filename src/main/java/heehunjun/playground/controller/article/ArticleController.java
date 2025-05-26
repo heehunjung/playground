@@ -4,7 +4,9 @@ import heehunjun.playground.controller.auth.AuthMember;
 import heehunjun.playground.domain.article.Article;
 import heehunjun.playground.domain.member.Member;
 import heehunjun.playground.dto.article.ArticleCreateRequest;
+import heehunjun.playground.dto.article.ArticleResponse;
 import heehunjun.playground.dto.article.ArticleResponses;
+import heehunjun.playground.dto.article.ArticleUpdateRequest;
 import heehunjun.playground.service.article.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,5 +56,19 @@ public class ArticleController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(articleService.createArticle(article));
+    }
+
+    /**
+     * Put : 멱등성 보장 ->updatedAt 분리 해야될듯
+     * 동시성 문제
+     */
+    @PutMapping("/api/article/{articleId}")
+    public ResponseEntity<ArticleResponse> updateArticle(@PathVariable Long articleId,
+                                                         @RequestBody ArticleUpdateRequest request,
+                                                         @AuthMember Member member) {
+        Article article = articleService.findById(articleId);
+        ArticleResponse result = articleService.updateArticle(article, request.toArticle(member));
+
+        return ResponseEntity.ok(result);
     }
 }
