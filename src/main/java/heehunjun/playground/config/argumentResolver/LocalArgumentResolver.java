@@ -30,7 +30,9 @@ public class LocalArgumentResolver extends MemberArgumentResolver {
         if (accessToken == null) {
             throw new HhjClientException(ClientErrorCode.UNAUTHORIZED_MEMBER);
         }
-        if(accessToken.equals("ngrinder")) return authService.findById(1);
+        if (accessToken.equals("ngrinder") || accessToken.equals("test")) {
+            return authService.findById(1);
+        }
 
         String email = jwtManager.extractAccessToken(accessToken);
         return authService.getMemberByEmail(email);
