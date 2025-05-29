@@ -11,6 +11,7 @@ import io.restassured.RestAssured;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -52,11 +53,11 @@ public class ArticleServiceTest {
             memberRepository.save(member);
             Article article = new Article("a".repeat(20), "a".repeat(25), member);
             Article savedArticle = articleRepository.save(article);
-            ArticleUpdateRequest request = new ArticleUpdateRequest("new title1",
-                    "new content1");
+            ArticleUpdateRequest request = new ArticleUpdateRequest("b".repeat(20),
+                    "b".repeat(25));
 
             // when
-            int threadCount = 1;
+            int threadCount = 1000;
             ExecutorService executor = Executors.newFixedThreadPool(100);
             CountDownLatch latch = new CountDownLatch(threadCount);
             for (int i = 0; i < threadCount; i++) {
@@ -70,6 +71,7 @@ public class ArticleServiceTest {
             }
             latch.await();
 
+            articleService.updateArticle(savedArticle, request.toArticle(member));
             Article updatedArticle = articleRepository.findById(savedArticle.getId()).get();
             assertThat(updatedArticle.getUpdatedCount()).isEqualTo(threadCount);
         }
