@@ -4,6 +4,7 @@ import heehunjun.playground.client.auth.OAuthContext;
 import heehunjun.playground.client.auth.OAuthType;
 import heehunjun.playground.domain.member.Member;
 import heehunjun.playground.dto.member.MemberInfo;
+import heehunjun.playground.dto.member.MemberResponse;
 import heehunjun.playground.dto.member.OauthToken;
 import heehunjun.playground.exception.HhjClientException;
 import heehunjun.playground.exception.code.ClientErrorCode;
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class AuthService {
@@ -30,4 +31,9 @@ public class AuthService {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new HhjClientException(ClientErrorCode.MEMBER_NOT_FOUND));
     }
+
+    public Member findById(long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(()-> new HhjClientException(ClientErrorCode.MEMBER_NOT_FOUND));
+    } // 없으면 ERROR OR 없다 ?
 }

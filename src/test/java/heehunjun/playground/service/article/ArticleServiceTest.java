@@ -46,7 +46,6 @@ public class ArticleServiceTest {
 
     @Nested
     class updateArticle {
-
         @Test
         void concurrentUpdateTest() throws InterruptedException {
             // given
@@ -58,13 +57,13 @@ public class ArticleServiceTest {
                     "b".repeat(25));
 
             // when
-            int threadCount = 1000;
+            int threadCount = 2000;
             ExecutorService executor = Executors.newFixedThreadPool(100);
             CountDownLatch latch = new CountDownLatch(threadCount);
             for (int i = 0; i < threadCount; i++) {
                 executor.submit(() -> {
                     try {
-                        articleService.updateArticle(savedArticle, request.toArticle(member));
+                        articleService.updateArticle(savedArticle.getId(), request.toArticle(member));
                     } finally {
                         latch.countDown();
                     }
@@ -72,7 +71,6 @@ public class ArticleServiceTest {
             }
             latch.await();
 
-            articleService.updateArticle(savedArticle, request.toArticle(member));
             Article updatedArticle = articleRepository.findById(savedArticle.getId()).get();
             assertAll(
                     () -> assertThat(updatedArticle.getUpdatedCount()).isEqualTo(threadCount),

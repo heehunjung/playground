@@ -3,6 +3,8 @@ package heehunjun.playground.service.member;
 import heehunjun.playground.domain.member.Member;
 import heehunjun.playground.dto.member.MemberInfo;
 import heehunjun.playground.dto.member.MemberResponse;
+import heehunjun.playground.exception.HhjClientException;
+import heehunjun.playground.exception.code.ClientErrorCode;
 import heehunjun.playground.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
