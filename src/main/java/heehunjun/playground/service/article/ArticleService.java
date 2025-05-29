@@ -51,7 +51,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse updateArticle(Article article, Article updatedArticle) {
+    public ArticleResponse updateArticle(long articleId, Article updatedArticle) {
+        Article article = articleRepository.findById(articleId)
+                        .orElseThrow(() -> new HhjClientException(ClientErrorCode.ARTICLE_NOT_FOUND));
         article.update(updatedArticle);
 
         return ArticleResponse.of(articleRepository.save(article));

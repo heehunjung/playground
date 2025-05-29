@@ -1,6 +1,7 @@
 package heehunjun.playground.service.article;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import heehunjun.playground.domain.article.Article;
 import heehunjun.playground.domain.member.Member;
@@ -73,7 +74,11 @@ public class ArticleServiceTest {
 
             articleService.updateArticle(savedArticle, request.toArticle(member));
             Article updatedArticle = articleRepository.findById(savedArticle.getId()).get();
-            assertThat(updatedArticle.getUpdatedCount()).isEqualTo(threadCount);
+            assertAll(
+                    () -> assertThat(updatedArticle.getUpdatedCount()).isEqualTo(threadCount),
+                    () -> assertThat(updatedArticle.getTitle()).isEqualTo(request.title()),
+                    () -> assertThat(updatedArticle.getContent()).isEqualTo(request.content())
+            );
         }
     }
 }

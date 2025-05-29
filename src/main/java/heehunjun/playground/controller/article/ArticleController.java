@@ -62,8 +62,7 @@ public class ArticleController {
     public ResponseEntity<ArticleResponse> updateArticle(@PathVariable Long articleId,
                                                          @RequestBody ArticleUpdateRequest request,
                                                          @AuthMember Member member) {
-        Article article = articleService.findById(articleId);
-        ArticleResponse result = articleService.updateArticle(article, request.toArticle(member));
+        ArticleResponse result = articleService.updateArticle(articleId, request.toArticle(member));
 
         return ResponseEntity.ok(result);
     }
