@@ -58,10 +58,6 @@ public class ArticleController {
                 .body(articleService.createArticle(article));
     }
 
-    /**
-     * Put : 멱등성 보장 ->updatedAt 분리 해야될듯
-     * 동시성 문제
-     */
     @PutMapping("/api/article/{articleId}")
     public ResponseEntity<ArticleResponse> updateArticle(@PathVariable Long articleId,
                                                          @RequestBody ArticleUpdateRequest request,

@@ -1,2 +1,2 @@
 ALTER TABLE article
-    ADD COLUMN updated_count BIGINT;
+    ADD COLUMN updated_count BIGINT DEFAULT 0 NOT NULL;

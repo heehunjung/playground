@@ -1,5 +1,50 @@
-application:
-  name: playground
 spring:
-  profiles:
-    active: test
+  jpa:
+    datasource:
+      url: jdbc:h2:mem:testdb;MODE=MYSQL
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+    h2:
+      console:
+        enabled: true
+        path: /h2-console
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+
+logging:
+  level:
+    root: info
+
+oauth:
+  google:
+    end-point: https://accounts.google.com/o/oauth2/v2/auth
+    response-type: code
+    scopes: profile, email
+    access-type: online
+    token-uri: https://oauth2.googleapis.com/token
+    redirect-uri: ${GOOGLE_REDIRECT_URL}
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+  kakao:
+    token-uri: https://kauth.kakao.com/oauth/token
+    redirect-uri: http://localhost:8080/oauth2/kakao
+    user-info-uri: https://kapi.kakao.com/v2/user/me
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+    api-key: ${KAKAO_API_KEY}
+
+jwt:
+  access:
+    secret: "testtesttesthhjhhj"
+    expiration: 1800000  # 30분
+  refresh:
+    secret: "testtesttesthhjhhj"
+    expiration: 86400000 # 1일
+

@@ -10,3 +10,4 @@ logging:
 #    root: debug
   discord-error:
     webhook-url: ${DISCORD_WEBHOOK_URI}
+ 

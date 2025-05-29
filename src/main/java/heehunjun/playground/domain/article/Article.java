@@ -33,12 +33,15 @@ public class Article {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private long updatedCount;
+
     public Article(String title, String content, Member member) {
         validateTitle(title);
         validateContent(content);
         this.title = title;
         this.content = content;
         this.member = member;
+        this.updatedCount = 0;
     }
 
     public void update(Article article) {
@@ -47,6 +50,7 @@ public class Article {
         this.title = article.getTitle();
         this.content = article.getContent();
         this.member = article.getMember();
+        this.updatedCount ++;
     }
 
     private void validateTitle(String title) {

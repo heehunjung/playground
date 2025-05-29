@@ -29,7 +29,7 @@ public class LoggerConfig {
         }
     }
 
-    @Profile({"test"})
+    @Profile({"test", "default"})
     @Configuration
     public static class consoleLoggerConfig {
 
