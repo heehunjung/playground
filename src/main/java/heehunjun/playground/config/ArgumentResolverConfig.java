@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class ArgumentResolverConfig {
 
-    @Profile({"dev", "default", "test"})
+    @Profile({"dev", "test"})
     @Configuration
     @RequiredArgsConstructor
     @EnableConfigurationProperties(DiscordProperties.class)
