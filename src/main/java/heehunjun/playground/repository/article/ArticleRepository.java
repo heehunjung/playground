@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-
     //간단하게
     @Query("SELECT a FROM Article a WHERE a.title = :cond")
     List<Article> findByCond(String cond);  // <- 구현체 ArrayList
@@ -23,4 +22,10 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query("SELECT COUNT(1) FROM Article")
     long myCount();
+
+    @Query(value = "select get_lock(:key, 3000)", nativeQuery = true)
+    void getLock(String key);
+
+    @Query(value = "select release_lock(:key)", nativeQuery = true)
+    void releaseLock(String key);
 }
