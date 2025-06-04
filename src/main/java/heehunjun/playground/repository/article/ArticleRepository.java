@@ -18,7 +18,11 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT a FROM Article  a WHERE a.id =:id")
-    Optional<Article> findByIdWithXLock(long id);
+    Optional<Article> findByIdWithPessimisticLock(long id);
+
+    @Lock(LockModeType.OPTIMISTIC)
+    @Query("SELECT a FROM Article a WHERE a.id = :id")
+    Optional<Article> findByIdWithOptimisticLock(@Param("id") Long id);
 
     @Query("SELECT COUNT(1) FROM Article")
     long myCount();
