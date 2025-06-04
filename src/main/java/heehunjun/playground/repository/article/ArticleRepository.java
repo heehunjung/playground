@@ -22,7 +22,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Lock(LockModeType.OPTIMISTIC)
     @Query("SELECT a FROM Article a WHERE a.id = :id")
-    Optional<Article> findByIdWithOptimisticLock(@Param("id") Long id);
+    Optional<Article> findByIdWithOptimisticLock(long id);
 
     @Query("SELECT COUNT(1) FROM Article")
     long myCount();

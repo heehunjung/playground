@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import heehunjun.playground.domain.article.Article;
 import heehunjun.playground.domain.member.Member;
+import heehunjun.playground.dto.article.ArticleResponse;
 import heehunjun.playground.dto.article.ArticleUpdateRequest;
 import heehunjun.playground.repository.article.ArticleRepository;
 import heehunjun.playground.repository.member.MemberRepository;
@@ -12,7 +13,6 @@ import io.restassured.RestAssured;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -45,38 +45,75 @@ public class ArticleServiceTest {
     }
 
     @Nested
-    class updateArticle {
+    class UpdateArticle {
+
         @Test
-        void concurrentUpdateTest() throws InterruptedException {
-            // given
+        void concurrentUpdateTest_비관적락() throws InterruptedException {
             Member member = new Member("testUser", "test@test.com", "kakao");
             memberRepository.save(member);
             Article article = new Article("a".repeat(20), "a".repeat(25), member);
             Article savedArticle = articleRepository.save(article);
-            ArticleUpdateRequest request = new ArticleUpdateRequest("b".repeat(20),
-                    "b".repeat(25));
-
-            // when
+            ArticleUpdateRequest request = new ArticleUpdateRequest("b".repeat(20), "b".repeat(25));
             int threadCount = 2000;
+
+            runConcurrentUpdate(
+                    () -> articleService.updateArticle(savedArticle.getId(),
+                            request.toArticle(member)),
+                    threadCount
+            );
+
+            validate(savedArticle, threadCount, request);
+        }
+
+        @Test
+        void concurrentUpdateTest_낙관적락() throws InterruptedException {
+            Member member = new Member("testUser", "test@test.com", "kakao");
+            memberRepository.save(member);
+            Article article = new Article("a".repeat(20), "a".repeat(25), member);
+            Article savedArticle = articleRepository.save(article);
+            ArticleUpdateRequest request = new ArticleUpdateRequest("b".repeat(20), "b".repeat(25));
+            int threadCount = 2000;
+
+            runConcurrentUpdate(
+                    () -> {
+                        try {
+                            articleService.updateArticleWithOptimisticLock(
+                                    savedArticle.getId(), request.toArticle(member))
+                            ;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    },
+                    threadCount
+            );
+
+            validate(savedArticle, threadCount, request);
+        }
+
+        private void runConcurrentUpdate(Runnable task, int threadCount)
+                throws InterruptedException {
             ExecutorService executor = Executors.newFixedThreadPool(100);
             CountDownLatch latch = new CountDownLatch(threadCount);
+
             for (int i = 0; i < threadCount; i++) {
                 executor.submit(() -> {
                     try {
-                        articleService.updateArticle(savedArticle.getId(), request.toArticle(member));
+                        task.run();
                     } finally {
                         latch.countDown();
                     }
                 });
             }
             latch.await();
-
-            Article updatedArticle = articleRepository.findById(savedArticle.getId()).get();
-            assertAll(
-                    () -> assertThat(updatedArticle.getUpdatedCount()).isEqualTo(threadCount),
-                    () -> assertThat(updatedArticle.getTitle()).isEqualTo(request.title()),
-                    () -> assertThat(updatedArticle.getContent()).isEqualTo(request.content())
-            );
         }
+    }
+
+    private void validate(Article savedArticle, int threadCount, ArticleUpdateRequest request) {
+        Article updatedArticle = articleRepository.findById(savedArticle.getId()).orElseThrow();
+        assertAll(
+                () -> assertThat(updatedArticle.getUpdatedCount()).isEqualTo(threadCount),
+                () -> assertThat(updatedArticle.getTitle()).isEqualTo(request.title()),
+                () -> assertThat(updatedArticle.getContent()).isEqualTo(request.content())
+        );
     }
 }

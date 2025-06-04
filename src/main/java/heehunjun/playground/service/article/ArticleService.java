@@ -7,13 +7,19 @@ import heehunjun.playground.dto.article.ArticleUpdateRequest;
 import heehunjun.playground.exception.HhjClientException;
 import heehunjun.playground.exception.code.ClientErrorCode;
 import heehunjun.playground.repository.article.ArticleRepository;
+import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ArticleService {
 
@@ -51,14 +57,30 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse updateArticle(long articleId, Article updatedArticle) {
+    public void updateArticle(long articleId, Article updatedArticle) {
 //        Article article = articleRepository.findById(articleId)
-        Article article = articleRepository.findByIdWithXLock(articleId)
+        Article article = articleRepository.findByIdWithPessimisticLock(articleId)
                 .orElseThrow(() -> new HhjClientException(ClientErrorCode.ARTICLE_NOT_FOUND));
         article.update(updatedArticle);
-
-        return ArticleResponse.of(articleRepository.save(article));
     }
 
+    @Transactional
+    public void updateArticleWithOptimisticLock(long articleId, Article updatedArticle)
+            throws InterruptedException {
+        while (true) {
+            try {
+                Article article = articleRepository.findByIdWithOptimisticLock(articleId)
+                        .orElseThrow(
+                                () -> new HhjClientException(ClientErrorCode.ARTICLE_NOT_FOUND));
 
+                article.update(updatedArticle);
+                articleRepository.saveAndFlush(article); //Flush 되는 시점에서 낙관적 락 검사
+                // 이전에 메서드 분리했을 땐 내부 메서드 호출이라 transaction이 안먹혔던 것
+                break;
+            } catch (ObjectOptimisticLockingFailureException e) {
+                System.out.println("Optimistic lock failure");
+                Thread.sleep(50);
+            }
+        }
+    }
 }

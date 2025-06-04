@@ -59,11 +59,11 @@ public class ArticleController {
     }
 
     @PutMapping("/api/article/{articleId}")
-    public ResponseEntity<ArticleResponse> updateArticle(@PathVariable Long articleId,
+    public ResponseEntity<Void> updateArticle(@PathVariable Long articleId,
                                                          @RequestBody ArticleUpdateRequest request,
                                                          @AuthMember Member member) {
-        ArticleResponse result = articleService.updateArticle(articleId, request.toArticle(member));
+        articleService.updateArticle(articleId, request.toArticle(member));
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.noContent().build();
     }
 }
