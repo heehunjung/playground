@@ -75,10 +75,6 @@ public class ArticleService {
     public void updateArticleWithOptimisticLock(long articleId, Article updatedArticle) {
         Article article = articleRepository.findByIdWithOptimisticLock(articleId)
                 .orElseThrow(() -> new HhjClientException(ClientErrorCode.ARTICLE_NOT_FOUND));
-        entityManager.unwrap(Session.class).doWork(connection -> {
-            log.info("🔁 Transaction Connection ID: {}, {}", System.identityHashCode(connection),
-                    article.getVersion());
-        });
         article.update(updatedArticle);
     }
 }
