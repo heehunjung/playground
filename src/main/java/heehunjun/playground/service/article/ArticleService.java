@@ -1,21 +1,22 @@
 package heehunjun.playground.service.article;
 
 import heehunjun.playground.domain.article.Article;
-import heehunjun.playground.dto.article.ArticleResponse;
 import heehunjun.playground.dto.article.ArticleResponses;
-import heehunjun.playground.dto.article.ArticleUpdateRequest;
 import heehunjun.playground.exception.HhjClientException;
 import heehunjun.playground.exception.code.ClientErrorCode;
 import heehunjun.playground.repository.article.ArticleRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.PersistenceContext;
+import java.sql.Connection;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public ArticleResponses findByCond(String cond) {
@@ -64,23 +66,20 @@ public class ArticleService {
         article.update(updatedArticle);
     }
 
+    @Retryable(
+            value = {OptimisticLockException.class, ObjectOptimisticLockingFailureException.class},
+            maxAttempts = 200,
+            backoff = @Backoff(delay = 10)
+    )
     @Transactional
-    public void updateArticleWithOptimisticLock(long articleId, Article updatedArticle)
-            throws InterruptedException {
-        while (true) {
-            try {
-                Article article = articleRepository.findByIdWithOptimisticLock(articleId)
-                        .orElseThrow(
-                                () -> new HhjClientException(ClientErrorCode.ARTICLE_NOT_FOUND));
-
-                article.update(updatedArticle);
-                articleRepository.saveAndFlush(article); //Flush 되는 시점에서 낙관적 락 검사
-                // 이전에 메서드 분리했을 땐 내부 메서드 호출이라 transaction이 안먹혔던 것
-                break;
-            } catch (ObjectOptimisticLockingFailureException e) {
-                System.out.println("Optimistic lock failure");
-                Thread.sleep(50);
-            }
-        }
+    public void updateArticleWithOptimisticLock(long articleId, Article updatedArticle) {
+        Article article = articleRepository.findByIdWithOptimisticLock(articleId)
+                .orElseThrow(() -> new HhjClientException(ClientErrorCode.ARTICLE_NOT_FOUND));
+        entityManager.unwrap(Session.class).doWork(connection -> {
+            log.info("🔁 Transaction Connection ID: {}, {}", System.identityHashCode(connection),
+                    article.getVersion());
+        });
+        article.update(updatedArticle);
     }
 }
+
