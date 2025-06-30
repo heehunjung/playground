@@ -1,8 +1,8 @@
 package heehunjun.playground.config;
 
 import heehunjun.playground.client.alert.discord.DiscordProperties;
-import heehunjun.playground.config.argumentResolver.LocalArgumentResolver;
-import heehunjun.playground.config.argumentResolver.ProdArgumentResolver;
+import heehunjun.playground.config.argumentResolver.LocalMemberArgumentResolver;
+import heehunjun.playground.config.argumentResolver.ProdMemberArgumentResolver;
 import heehunjun.playground.controller.tool.token.jwt.JwtManager;
 import heehunjun.playground.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,9 @@ public class ArgumentResolverConfig {
     public static class LocalArgumentResolverConfig {
 
         @Bean
-        public LocalArgumentResolver localArgumentResolver(JwtManager jwtManager,
-                                                           AuthService authService) {
-            return new LocalArgumentResolver(jwtManager, authService);
+        public LocalMemberArgumentResolver localArgumentResolver(JwtManager jwtManager,
+                                                                 AuthService authService) {
+            return new LocalMemberArgumentResolver(jwtManager, authService);
         }
     }
 
@@ -32,9 +32,9 @@ public class ArgumentResolverConfig {
     public static class consoleLoggerConfig {
 
         @Bean
-        public ProdArgumentResolver prodArgumentResolver(JwtManager jwtManager,
-                                                         AuthService authService) {
-            return new ProdArgumentResolver(jwtManager, authService);
+        public ProdMemberArgumentResolver prodArgumentResolver(JwtManager jwtManager,
+                                                               AuthService authService) {
+            return new ProdMemberArgumentResolver(jwtManager, authService);
         }
     }
 }

@@ -12,7 +12,6 @@ import io.restassured.RestAssured;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -72,7 +71,7 @@ public class ArticleServiceTest {
             Article article = new Article("a".repeat(20), "a".repeat(25), member);
             Article savedArticle = articleRepository.save(article);
             ArticleUpdateRequest request = new ArticleUpdateRequest("b".repeat(20), "b".repeat(25));
-            int threadCount = 200;
+            int threadCount = 2000;
 
             runConcurrentUpdate(
                     () -> {

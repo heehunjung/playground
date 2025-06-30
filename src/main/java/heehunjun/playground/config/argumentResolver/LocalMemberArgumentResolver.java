@@ -1,13 +1,9 @@
 package heehunjun.playground.config.argumentResolver;
 
-import heehunjun.playground.controller.auth.AuthMember;
 import heehunjun.playground.controller.tool.token.jwt.JwtManager;
-import heehunjun.playground.dto.member.MemberResponse;
 import heehunjun.playground.exception.HhjClientException;
 import heehunjun.playground.exception.code.ClientErrorCode;
 import heehunjun.playground.service.auth.AuthService;
-import heehunjun.playground.service.member.MemberService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +12,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Slf4j
-public class LocalArgumentResolver extends MemberArgumentResolver {
+public class LocalMemberArgumentResolver extends MemberArgumentResolver {
 
-    public LocalArgumentResolver(JwtManager jwtManager, AuthService authService) {
+    public LocalMemberArgumentResolver(JwtManager jwtManager, AuthService authService) {
         super(jwtManager, authService);
     }
 

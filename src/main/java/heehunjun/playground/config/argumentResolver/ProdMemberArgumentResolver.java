@@ -4,7 +4,6 @@ import heehunjun.playground.controller.tool.token.jwt.JwtManager;
 import heehunjun.playground.exception.HhjClientException;
 import heehunjun.playground.exception.code.ClientErrorCode;
 import heehunjun.playground.service.auth.AuthService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -13,9 +12,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Slf4j
-public class ProdArgumentResolver extends MemberArgumentResolver {
+public class ProdMemberArgumentResolver extends MemberArgumentResolver {
 
-    public ProdArgumentResolver(JwtManager jwtManager, AuthService authService) {
+    public ProdMemberArgumentResolver(JwtManager jwtManager, AuthService authService) {
         super(jwtManager, authService);
     }
 
