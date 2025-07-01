@@ -16,8 +16,6 @@ public class ArgumentResolverConfig {
 
     @Profile({"dev", "test", "default"})
     @Configuration
-    @RequiredArgsConstructor
-    @EnableConfigurationProperties(DiscordProperties.class)
     public static class LocalArgumentResolverConfig {
 
         @Bean
