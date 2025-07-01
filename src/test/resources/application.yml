@@ -1,22 +1,22 @@
-application:
-  name: playground
-
 spring:
-  profiles:
-    active: dev
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   jpa:
     show-sql: false
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: validate
-    defer-datasource-initialization: false
+      ddl-auto: create
   flyway:
-      enabled: true
-      baseline-on-migrate: true
-      baseline-version: 1
+    enabled: false
 
 logging:
   level:
@@ -39,3 +39,11 @@ oauth:
     client-id: ${KAKAO_CLIENT_ID}
     client-secret: ${KAKAO_CLIENT_SECRET}
     api-key: ${KAKAO_API_KEY}
+
+jwt:
+  access:
+    secret: "testtesttesthhjhhj"
+    expiration: 1800000  # 30분
+  refresh:
+    secret: "testtesttesthhjhhj"
+    expiration: 86400000 # 1일

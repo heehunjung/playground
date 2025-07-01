@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        /* 기존 스타일 유지 */
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h1>Login</h1>
+    <!-- 카카오 로그인 버튼 -->
+    <button class="login-btn kakao-btn"
+            onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=ef36bac8b68f77236b0eaafc6a92cd2d&redirect_uri=http://localhost:8080/oauth2/kakao&response_type=code'">
+        카카오 로그인
+    </button>
+    <!-- 구글 로그인 버튼 -->
+    <button class="login-btn google-btn" onclick="location.href='https://accounts.google.com/o/oauth2/v2/auth?'+
+        'response_type=code&'+
+        'client_id=1090097674862-khfohqmcddb785oh69tateobinndh4tt.apps.googleusercontent.com&'+
+        'redirect_uri=http://localhost:8080/oauth2/google&'+
+        'scope=profile%20email&'+
+        'access_type=online'">
+        구글 로그인
+    </button>
+</div>
+<script>
+    // 리디렉션 후 code 처리
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const provider = window.location.pathname.includes('kakao') ? 'KAKAO' :
+            window.location.pathname.includes('google') ? 'GOOGLE' : null;
+
+        if (code && provider) {
+            fetch('/api/member', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, type: provider })
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('Login failed');
+                    // Authorization 헤더에서 Access Token 추출
+                    const accessToken = response.headers.get('Authorization')?.replace('Bearer ', '');
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Login success:', data, 'Access Token:', accessToken);
+                    // Refresh Token은 HttpOnly 쿠키로 자동 저장
+                    // 로그인 후 페이지 이동 (예: 대시보드)
+                    window.location.href = '/dashboard';
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    };
+</script>
+</body>
+</html>

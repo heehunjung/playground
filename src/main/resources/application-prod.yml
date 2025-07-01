@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: ${AWS_ENDPOINT}
+    username: ${AWS_USERNAME}
+    password: ${AWS_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  discord-error:
+    webhook-url: ${DISCORD_WEBHOOK_URI}
+
+jwt:
+  access:
+    secret: ${ACCESS_TOKEN_SECRET}
+    expiration: ${ACCESS_TOKEN_EXPIRATION}
+  refresh:
+    secret: ${REFRESH_TOKEN_SECRET}
+    expiration: ${REFRESH_TOKEN_EXPIRATION}
+

@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+#  level:
+#    root: debug
+  discord-error:
+    webhook-url: ${DISCORD_WEBHOOK_URI}
+ 
