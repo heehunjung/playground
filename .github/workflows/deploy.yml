@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest # (3).OS 환경
     if: github.event.pull_request.merged == true &&
       github.event.pull_request.base.ref == 'master'
-
+ 
     steps:
       - name: Checkout
         uses: actions/checkout@v2 #(4).코드 checkout
