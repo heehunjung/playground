@@ -1,11 +1,13 @@
 package heehunjun.playground.exception;
 
-import heehunjun.playground.client.alert.Logger;
+import heehunjun.playground.client.logger.Logger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @ControllerAdvice
@@ -37,6 +39,23 @@ public class GlobalExceptionController {
         return ResponseEntity.status(exception.getStatus())
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity handleNoResourceFoundException(NoResourceFoundException exception) {
+        clientLog(exception);
+
+        return ResponseEntity.status(exception.getStatusCode())
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity handleHttpRequestMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException exception) {
+        clientLog(exception);
+
+        return ResponseEntity.status(exception.getStatusCode())
+                .body(exception.getMessage());
+    }
     // 추가 예정
 
     private void clientLog(Exception exception) {
@@ -44,6 +63,6 @@ public class GlobalExceptionController {
     }
 
     private void serverLog(Exception exception) {
-        log.error("server exception: {}", exception.getMessage());
         logger.log(exception);
-    }}
+    }
+}

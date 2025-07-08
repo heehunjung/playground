@@ -1,12 +1,9 @@
 package heehunjun.playground.config;
 
-import heehunjun.playground.client.alert.discord.DiscordProperties;
 import heehunjun.playground.config.argumentResolver.LocalMemberArgumentResolver;
 import heehunjun.playground.config.argumentResolver.ProdMemberArgumentResolver;
 import heehunjun.playground.controller.tool.token.jwt.JwtManager;
 import heehunjun.playground.service.auth.AuthService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

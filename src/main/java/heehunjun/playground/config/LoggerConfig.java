@@ -1,9 +1,9 @@
 package heehunjun.playground.config;
 
-import heehunjun.playground.client.alert.ConsoleLogger;
-import heehunjun.playground.client.alert.Logger;
-import heehunjun.playground.client.alert.discord.DiscordLogger;
-import heehunjun.playground.client.alert.discord.DiscordProperties;
+import heehunjun.playground.client.logger.ConsoleLogger;
+import heehunjun.playground.client.logger.Logger;
+import heehunjun.playground.client.logger.discord.DiscordLogger;
+import heehunjun.playground.client.logger.discord.DiscordProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
