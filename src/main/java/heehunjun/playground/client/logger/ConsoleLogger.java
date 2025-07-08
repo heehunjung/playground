@@ -7,6 +7,6 @@ public class ConsoleLogger implements Logger {
 
     @Override
     public void log(Throwable e) {
-        log.error("exception message: {} ", e);
+        log.error("exception", e);
     }
 }

@@ -1,8 +1,9 @@
 package heehunjun.playground;
 
+import heehunjun.playground.exception.HhjServerException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -19,8 +20,8 @@ public class HealthController {
         return "건강해요.";
     }
 
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login";
+    @GetMapping("/server")
+    public void loginPage() {
+        throw new HhjServerException("test123", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

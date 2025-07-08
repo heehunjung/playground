@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class LoggerConfig {
 
-    @Profile({"dev", "prod"})
+    @Profile({"prod"})
     @Configuration
     @RequiredArgsConstructor
     @EnableConfigurationProperties(DiscordProperties.class)
@@ -28,7 +28,7 @@ public class LoggerConfig {
         }
     }
 
-    @Profile({"test", "default"})
+    @Profile({"test", "default", "dev"})
     @Configuration
     public static class consoleLoggerConfig {
 
