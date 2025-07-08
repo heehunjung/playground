@@ -1,4 +1,4 @@
-package heehunjun.playground.client.alert.discord;
+package heehunjun.playground.client.logger.discord;
 
 import java.util.List;
 

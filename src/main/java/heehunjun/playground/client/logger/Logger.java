@@ -1,4 +1,4 @@
-package heehunjun.playground.client.alert;
+package heehunjun.playground.client.logger;
 
 public interface Logger {
 

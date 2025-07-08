@@ -1,6 +1,6 @@
-package heehunjun.playground.client.alert.discord;
+package heehunjun.playground.client.logger.discord;
 
-import heehunjun.playground.client.alert.Logger;
+import heehunjun.playground.client.logger.Logger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
